@@ -2,7 +2,7 @@
 
 Florinda Eats is a food delivery application for Dona Florinda's restaurant.
 
-**Requirements:** JDK 25 and Maven 3.9+
+**Requirements:** JDK 25 and Maven 3.9+ (for local development). Docker Desktop (or Docker Engine + Compose plugin) to run the full stack.
 
 It is a **microservices architecture** made up of the following services:
 
@@ -21,21 +21,94 @@ It is a **microservices architecture** made up of the following services:
 | [kafka-commands.md](kafka-commands.md) | Step-by-step Kafka setup, topic management, and message testing |
 | [kafka-commands.sh](kafka-commands.sh) | Quick reference shell script with the most common Kafka commands |
 
-## What you need to do
+## Run everything with Docker Compose
 
-### Run Kafka
-
-The `docker-compose.yml` file at the project root starts Kafka on port **9092**.
+The `docker-compose.yml` file at the project root starts **Kafka**, **MySQL**, and all four microservices.
 
 From the project root:
 
 ```sh
-docker compose up
+docker compose up --build
 ```
 
-Wait a moment for Kafka to become ready.
+Use `--build` the first time (or after code changes). After that, `docker compose up` is enough.
 
-To create the topic and run other useful commands, see [kafka-commands.md](kafka-commands.md).
+Run in the background:
+
+```sh
+docker compose up --build -d
+```
+
+Stop everything:
+
+```sh
+docker compose down
+```
+
+To also remove MySQL data:
+
+```sh
+docker compose down -v
+```
+
+### Startup order
+
+1. **MySQL** and **Kafka** start first
+2. **kafka-init** creates the `paymentsConfirmed` topic, then exits
+3. **orders**, **payments**, **invoices**, and **signer** start after dependencies are ready
+
+The first run can take several minutes while Maven builds all four apps inside Docker.
+
+### Verify it is working
+
+```sh
+curl http://localhost:8080/orders
+curl http://localhost:8081/payments
+```
+
+Confirm a payment (publishes a `PaymentConfirmed` event to Kafka):
+
+```sh
+curl -X PUT http://localhost:8081/payments/1
+```
+
+Watch invoices and signer process the event:
+
+```sh
+docker compose logs -f invoices signer
+```
+
+### Ports
+
+| Service | URL |
+|---------|-----|
+| Orders | http://localhost:8080 |
+| Payments | http://localhost:8081 |
+| Invoices | http://localhost:8082 |
+| Signer | http://localhost:8083 |
+| Kafka | localhost:9092 |
+| MySQL | localhost:3306 |
+
+If something fails, check service logs:
+
+```sh
+docker compose logs orders
+docker compose logs payments
+```
+
+For manual Kafka commands (topics, producers, consumers), see [kafka-commands.md](kafka-commands.md).
+
+---
+
+## Local development (IntelliJ)
+
+Alternatively, run each service individually with `quarkus:dev` in IntelliJ. You still need Kafka running — start it with:
+
+```sh
+docker compose up kafka mysql -d
+```
+
+Wait for Kafka to become ready, then create the topic (see [kafka-commands.md](kafka-commands.md)).
 
 ### Run the Payments service
 

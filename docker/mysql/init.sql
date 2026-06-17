@@ -1,0 +1,7 @@
+CREATE DATABASE IF NOT EXISTS orders;
+CREATE DATABASE IF NOT EXISTS payments;
+
+CREATE USER IF NOT EXISTS 'florinda'@'%' IDENTIFIED BY 'florinda';
+GRANT ALL PRIVILEGES ON orders.* TO 'florinda'@'%';
+GRANT ALL PRIVILEGES ON payments.* TO 'florinda'@'%';
+FLUSH PRIVILEGES;
