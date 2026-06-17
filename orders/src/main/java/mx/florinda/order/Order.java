@@ -10,9 +10,11 @@ import java.util.List;
 @Table(name = "`Order`")
 public class Order extends PanacheEntity {
 
+  @Column(nullable = false)
   public LocalDateTime orderDateTime;
 
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   public OrderStatus status;
 
   @Embedded

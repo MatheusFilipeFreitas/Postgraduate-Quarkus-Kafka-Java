@@ -6,16 +6,16 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class Customer {
 
-  @Column(name = "customerName")
+  @Column(name = "customerName", nullable = false)
   public String name;
 
-  @Column(name = "customerCpf")
+  @Column(name = "customerCpf", nullable = false)
   public String cpf;
 
-  @Column(name = "customerPhone")
+  @Column(name = "customerPhone", nullable = false)
   public String phone;
 
-  @Column(name = "customerAddress")
+  @Column(name = "customerAddress", nullable = false)
   public String address;
 
 }

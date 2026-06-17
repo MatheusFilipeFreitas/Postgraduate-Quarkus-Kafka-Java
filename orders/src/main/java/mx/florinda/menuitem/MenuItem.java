@@ -8,12 +8,15 @@ import java.math.BigDecimal;
 @Entity
 public class MenuItem extends PanacheEntity {
 
+  @Column(nullable = false)
   public String name;
   public String description;
 
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   public MenuCategory category;
 
+  @Column(nullable = false)
   public BigDecimal price;
   public BigDecimal promotionalPrice;
 

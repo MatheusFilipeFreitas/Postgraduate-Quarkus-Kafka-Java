@@ -2,6 +2,8 @@
 
 Florinda Eats is a food delivery application for Dona Florinda's restaurant.
 
+**Requirements:** JDK 25 and Maven 3.9+
+
 It is a **microservices architecture** made up of the following services:
 
 | Service | Module folder | Port | Description |

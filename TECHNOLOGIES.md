@@ -45,7 +45,7 @@ flowchart LR
 
 ### Platform and build
 
-#### Quarkus 3.15.1
+#### Quarkus 3.31.1
 
 **Cloud-native** Java framework used by all four microservices. Provides fast startup, low memory usage, and native integration with REST, databases, Kafka, and dependency injection.
 
@@ -53,9 +53,9 @@ flowchart LR
 - **How to run:** `mvn quarkus:dev` (Quarkus Maven plugin)
 - **Files:** `pom.xml` in each service
 
-#### Java 21
+#### Java 25
 
-Java language version used in the project (`maven.compiler.release=21`).
+Java language version used in the project (`maven.compiler.release=25`).
 
 - **Where:** source code in all services
 - **Features used:** POJO classes, text blocks (`"""`) in `OrderService.invoice()`, `LocalDateTime`, `UUID`
