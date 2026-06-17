@@ -17,9 +17,11 @@ It is a **microservices architecture** made up of the following services:
 
 | Document | Description |
 |----------|-------------|
-| [TECHNOLOGIES.md](TECHNOLOGIES.md) | Stack overview (Quarkus, Flyway, Kafka, Hibernate Reactive, etc.) and where each technology is used |
-| [kafka-commands.md](kafka-commands.md) | Step-by-step Kafka setup, topic management, and message testing |
-| [kafka-commands.sh](kafka-commands.sh) | Quick reference shell script with the most common Kafka commands |
+| [docs/TECHNOLOGIES.md](docs/TECHNOLOGIES.md) | Stack overview (Quarkus, Flyway, Kafka, Hibernate Reactive, etc.) and where each technology is used |
+| [docs/kafka-libraries.md](docs/kafka-libraries.md) | Kafka-related libraries and extensions (`quarkus-messaging-kafka`, MicroProfile Reactive Messaging, Jackson, Mutiny) |
+| [docs/kafka-how-it-works.md](docs/kafka-how-it-works.md) | How Kafka is wired in this project (broker, topic, producer, consumers, configuration) |
+| [docs/kafka-commands.md](docs/kafka-commands.md) | Step-by-step Kafka setup, topic management, and message testing |
+| [docs/kafka-event-flow.md](docs/kafka-event-flow.md) | Payment event flows and verification tests |
 
 ## Run everything with Docker Compose
 
@@ -96,7 +98,7 @@ docker compose logs orders
 docker compose logs payments
 ```
 
-For manual Kafka commands (topics, producers, consumers), see [kafka-commands.md](kafka-commands.md).
+For event flows and verification tests, see [docs/kafka-event-flow.md](docs/kafka-event-flow.md).
 
 ---
 
@@ -108,7 +110,7 @@ Alternatively, run each service individually with `quarkus:dev` in IntelliJ. You
 docker compose up kafka mysql -d
 ```
 
-Wait for Kafka to become ready, then create the topic (see [kafka-commands.md](kafka-commands.md)).
+Wait for Kafka to become ready, then create the topic (see [docs/kafka-commands.md](docs/kafka-commands.md)).
 
 ### Run the Payments service
 

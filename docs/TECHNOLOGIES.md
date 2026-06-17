@@ -184,7 +184,10 @@ Message broker for **asynchronous** communication between microservices. When a 
 - **Where:** infrastructure via `docker-compose.yml`
 - **Main topic:** `paymentsConfirmed` (3 partitions)
 - **Port:** `localhost:9092`
+- **Libraries:** [kafka-libraries.md](kafka-libraries.md)
+- **How it works:** [kafka-how-it-works.md](kafka-how-it-works.md)
 - **Command guide:** [kafka-commands.md](kafka-commands.md)
+- **Event flow and tests:** [kafka-event-flow.md](kafka-event-flow.md)
 
 #### MicroProfile Reactive Messaging
 
@@ -224,10 +227,10 @@ Dependency injection container (CDI implementation). Manages application-scoped 
 
 #### Docker Compose
 
-Orchestrates local infrastructure services. In this project, it only starts **Kafka**.
+Orchestrates local infrastructure and all microservices. Starts **Kafka**, **MySQL**, and the four Quarkus apps.
 
-- **File:** `docker-compose.yml`
-- **Command:** `docker compose up`
+- **File:** `docker-compose.yml` (project root)
+- **Command:** `docker compose up --build`
 
 #### Jib
 
@@ -274,7 +277,8 @@ Library for fluent REST API testing in automated tests.
 
 HTTP collections for manually testing each service's endpoints.
 
-- **Files:**
+- **Unified collection:** `florinda-eats.postman_collection.json` (project root)
+- **Per-service collections:**
   - `orders/florinda-eats-orders.postman_collection.json`
   - `payments/florinda-eats-payments.postman_collection.json`
   - `invoices/florinda-eats-invoices.postman_collection.json`
@@ -330,4 +334,4 @@ This flow shows how the technologies work together:
    - **Invoices** — calls **REST Client** on Orders, builds XML, and prints to console
    - **Signer** — computes **MD5** of the event and prints to console
 
-For Kafka operational details, see [kafka-commands.md](kafka-commands.md).
+For event flows and verification tests, see [kafka-event-flow.md](kafka-event-flow.md).

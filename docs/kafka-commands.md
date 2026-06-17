@@ -61,6 +61,8 @@ Topic: paymentsConfirmed  PartitionCount: 3  ReplicationFactor: 1
 
 ## 4. Publish messages manually (console producer)
 
+> **Note:** Manual publishing triggers consumers only. See [kafka-event-flow.md](kafka-event-flow.md) for flows and tests.
+
 Command with **key and value** separated by `;`:
 
 ```sh
@@ -161,3 +163,41 @@ sequenceDiagram
 - **`docker exec -it`** — `-it` is required for interactive commands (producer/consumer).
 - **Port** — use `localhost:9092` inside the container and on the host (mapped in `docker-compose.yml`).
 - **Topic** — always use `paymentsConfirmed` (the name used in `PaymentResource`, `orders`, `invoices`, and `signer`).
+- **Docker Compose** — `docker compose up` creates the topic automatically via `kafka-init`; steps 2–3 are only needed when running Kafka standalone.
+
+---
+
+## Quick reference
+
+```sh
+# List topics
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+
+# Create topic
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --create --topic paymentsConfirmed --bootstrap-server localhost:9092
+
+# Describe topic
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --describe --topic paymentsConfirmed --bootstrap-server localhost:9092
+
+# Produce (with key)
+docker exec -it kafka /opt/kafka/bin/kafka-console-producer.sh \
+  --bootstrap-server localhost:9092 \
+  --property "parse.key=true" \
+  --property "key.separator=;" \
+  --topic paymentsConfirmed
+# >1;{"paymentId": 1, "orderId": 1, "amount": 9.48}
+
+# Consume from beginning
+docker exec -it kafka /opt/kafka/bin/kafka-console-consumer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic paymentsConfirmed \
+  --from-beginning
+
+# Consumer groups
+docker exec -it kafka /opt/kafka/bin/kafka-consumer-groups.sh \
+  --bootstrap-server localhost:9092 \
+  --all-groups \
+  --describe
+```
+
+For event flows and end-to-end tests, see [kafka-event-flow.md](kafka-event-flow.md).
