@@ -1,63 +1,73 @@
 # florinda-eats-microservices
 
-Florinda Eats é uma aplicação de entrega de comida para o restaurante da Dona Florinda.
+Florinda Eats is a food delivery application for Dona Florinda's restaurant.
 
-É uma Arquitetura de Microservices composta pelos seguintes serviços:
+It is a **microservices architecture** made up of the following services:
 
-- **Pedidos**, que tem informações do cardápio e dos pedidos realizados. Roda na porta 8080
-- **Pagamentos**, que permite a confirmação de um pagamento. Roda na porta 8081
-- **Nota Fiscal**, que gera XMLs de notas fiscais na saída padrão. Roda na porta 8082
-- **Signer**, que gera um hash MD5 do pagamento na saída padrão. Roda na porta 8083
+| Service | Module folder | Port | Description |
+|---------|---------------|------|-------------|
+| **Orders** | `orders/` | 8080 | Menu and order management |
+| **Payments** | `payments/` | 8081 | Payment confirmation |
+| **Invoices** | `invoices/` | 8082 | Generates invoice XML to standard output |
+| **Signer** | `signer/` | 8083 | Generates an MD5 hash of the payment event to standard output |
 
-# O que você precisa fazer?
+## Documentation
 
-## Executar o Kafka
+| Document | Description |
+|----------|-------------|
+| [TECHNOLOGIES.md](TECHNOLOGIES.md) | Stack overview (Quarkus, Flyway, Kafka, Hibernate Reactive, etc.) and where each technology is used |
+| [kafka-commands.md](kafka-commands.md) | Step-by-step Kafka setup, topic management, and message testing |
+| [kafka-commands.sh](kafka-commands.sh) | Quick reference shell script with the most common Kafka commands |
 
-O arquivo `docker-compose.yml` contém uma configuração de Kafka cuja porta para conexões externas ao container é `9094`.
+## What you need to do
 
-Para executar o Kafka, abra um Terminal e rode na raiz do projeto:
+### Run Kafka
+
+The `docker-compose.yml` file at the project root starts Kafka on port **9092**.
+
+From the project root:
 
 ```sh
 docker compose up
 ```
 
-Espera um tiquinho que o Kafka deve subir.
+Wait a moment for Kafka to become ready.
 
-Criar o tópico
+To create the topic and run other useful commands, see [kafka-commands.md](kafka-commands.md).
 
-## Executar o serviço de Pagamento
+### Run the Payments service
 
-Abra a código do serviço de pagamentos no IntelliJ.
+Open the `payments/` module in IntelliJ.
 
-Execute o serviço através do IntelliJ, utilizando _Maven_ > _Plugins_ > _Quarkus_ > `quarkus:dev`.
+Run the service via _Maven_ > _Plugins_ > _Quarkus_ > `quarkus:dev`.
 
-Abra o Postman, e confirme um pagamento realizando um `PUT http://localhost:8081/pagamentos/1`.
+In Postman, confirm a payment with `PUT http://localhost:8081/payments/1`.
 
-Ao confirmar um pagamento, o serviço de pagamento produz um evento `PagamentoConfirmado` para o tópico `pagamentosConfirmados` do Kafka.
+When a payment is confirmed, the Payments service publishes a `PaymentConfirmed` event to the `paymentsConfirmed` Kafka topic.
 
-## Executar o serviço de Pedidos
+### Run the Orders service
 
-Abra a código do serviço de pedidos no IntelliJ.
+Open the `orders/` module in IntelliJ.
 
-Execute o serviço através do IntelliJ, utilizando _Maven_ > _Plugins_ > _Quarkus_ > `quarkus:dev`.
+Run the service via _Maven_ > _Plugins_ > _Quarkus_ > `quarkus:dev`.
 
-Verifique a listagem de pedidos na URL `http://localhost:8080/pedidos`.
+List orders at `http://localhost:8080/orders`.
 
-Detalhe um pedido (p. ex., o de id 1) com a URL `http://localhost:8080/pedidos/1`
+Get order details (e.g. id 1) at `http://localhost:8080/orders/1`.
 
-## Executar o serviço Signer
+### Run the Signer service
 
-Abra o código do Signer no IntelliJ.
+Open the `signer/` module in IntelliJ.
 
-O código está quase completo: 
+The code is almost complete:
 
-- a extensão do Kafka está adicionada no `pom.xml`
-- o endereço do broker já está configurado no `application.properties`
-- já existe a classe `PagamentoConfirmadoEvent` com os devidos atributos
-- já existe a classe `PagamentoConfirmadoConsumer` já invoca a classe `Hash` e imprime o resultado no console.
+- the Kafka extension is added in `pom.xml`
+- the broker address is configured in `application.properties`
+- the `PaymentConfirmedEvent` class already exists with the required fields
+- the `PaymentConfirmedConsumer` class already calls `Hash` and prints the result to the console
 
-O que falta? Complete o código da classe `PagamentoConfirmadoConsumer`.
+What is missing? Complete the `PaymentConfirmedConsumer` class (wire the `@Incoming` Kafka channel if not already done).
 
-## Responda a pergunta do Quizz
+### Answer the quiz question
 
-Qual é o hash do pedido de Godinez?
+What is the hash for Godinez's order?
